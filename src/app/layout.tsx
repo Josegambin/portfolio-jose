@@ -1,57 +1,31 @@
-// src/app/layout.tsx
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { ThemeProvider } from "next-themes";
 import "./globals.css";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
-import { Analytics } from "@vercel/analytics/react";
 
-const inter = Inter({ 
-  subsets: ["latin"],
-  variable: "--font-inter",
-});
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: {
-    default: "José Gambín | Full Stack Developer",
-    template: "%s | José Gambín",
-  },
-  description: "Desarrollador Full Stack especializado en Java, Spring Boot y aplicaciones web modernas.",
-  keywords: ["Full Stack Developer", "Java", "Spring Boot", "React", "Next.js", "TypeScript"],
-  authors: [{ name: "José Gambín" }],
-  creator: "José Gambín",
-  openGraph: {
-    type: "website",
-    locale: "es_ES",
-    url: "https://tu-dominio.com",
-    title: "José Gambín | Full Stack Developer",
-    description: "Desarrollador Full Stack especializado en Java, Spring Boot y aplicaciones web modernas.",
-    siteName: "José Gambín Portfolio",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "José Gambín | Full Stack Developer",
-    description: "Desarrollador Full Stack especializado en Java, Spring Boot y aplicaciones web modernas.",
-    creator: "@tu-usuario",
-  },
-  robots: {
-    index: true,
-    follow: true,
-  },
+  title: "José Gambín · Full Stack Developer",
+  description: "Portfolio de José Gambín, desarrollador Full Stack especializado en Java, Spring Boot y aplicaciones web modernas.",
 };
 
 export default function RootLayout({
   children,
-}: {
+}: Readonly<{
   children: React.ReactNode;
-}) {
+}>) {
   return (
-    <html lang="es" className={inter.variable}>
-      <body className="bg-black text-white antialiased">
-        <Navbar />
-        <main className="pt-20">{children}</main>
-        <Footer />
-        <Analytics />
+    <html lang="es" suppressHydrationWarning>
+      <body className={inter.className}>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="light"
+          enableSystem
+          disableTransitionOnChange
+        >
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   );
