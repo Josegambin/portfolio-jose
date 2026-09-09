@@ -11,12 +11,9 @@ import { Input } from "@/components/ui/input";
 import { 
   Send, 
   CheckCircle, 
-  AlertCircle, 
-  Mail, 
-  MapPin, 
-  Phone
+  AlertCircle,
+  Mail
 } from "lucide-react";
-import { GithubIcon as GithubIconSvg, LinkedinIcon as LinkedinIconSvg } from "@/components/icons";
 
 // Schema de validación con Zod
 const contactSchema = z.object({
@@ -32,32 +29,6 @@ const contactSchema = z.object({
 });
 
 type ContactFormData = z.infer<typeof contactSchema>;
-
-const contactInfo = [
-  {
-    icon: Mail,
-    label: "Email",
-    value: "josemanuel.gambin@gmail.com",
-    href: "mailto:josemanuel.gambin@gmail.com"
-  },
-  {
-    icon: Phone,
-    label: "Teléfono",
-    value: "+34 665 573 606",
-    href: "tel:+34665573606"
-  },
-  {
-    icon: MapPin,
-    label: "Ubicación",
-    value: "Cox - Alicante, España",
-    href: "https://www.google.com/maps/search/?api=1&query=Cox%2C%20Alicante%2C%20Espana"
-  }
-];
-
-const socialLinks = [
-  { icon: GithubIconSvg, href: "https://github.com/Josegambin", label: "GitHub" },
-  { icon: LinkedinIconSvg, href: "https://linkedin.com/in/jose-gambin", label: "LinkedIn" },
-];
 
 export default function Contact() {
   const [loading, setLoading] = useState(false);
@@ -119,99 +90,48 @@ export default function Contact() {
   }
 
   return (
-    <section id="contact" className="container mx-auto px-6 py-24 relative">
+    <section id="contact" className="container mx-auto px-6 pt-10 pb-24 relative">
       <div className="absolute inset-0 mesh-gradient opacity-20"></div>
-      <div className="grid lg:grid-cols-4 gap-12 relative z-10">
-        {/* Información de contacto */}
+      <div className="relative z-10 w-full">
         <motion.div
-          initial={{ opacity: 0, x: -30 }}
-          whileInView={{ opacity: 1, x: 0 }}
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           viewport={{ once: true, margin: "-100px" }}
-          className="lg:col-span-1"
+          className="text-center mb-10"
         >
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true, margin: "-100px" }}
-            className="mb-8"
-          >
-            <h2 className="text-4xl md:text-5xl font-bold mb-4">
-              Contacto <span className="gradient-text">directo</span>
-            </h2>
-            <div className="w-20 h-1 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full"></div>
-          </motion.div>
-          
-          <p className="text-zinc-400 mb-8 text-lg leading-relaxed">
-            ¿Tienes un proyecto en mente? Hablemos y hagamos algo increíble juntos.
-          </p>
-
-          <div className="space-y-4">
-            {contactInfo.map((item, index) => (
-              <motion.a
-                key={item.label}
-                href={item.href}
-                className="flex items-center gap-4 p-4 rounded-xl border border-zinc-800 hover:border-blue-500/50 hover:bg-zinc-900/50 transition group glass-card"
-                initial={{ opacity: 0, x: -20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                transition={{ delay: index * 0.1, duration: 0.5 }}
-                viewport={{ once: true, margin: "-100px" }}
-              >
-                <motion.div
-                  className="p-3 rounded-xl bg-zinc-900 text-blue-400 group-hover:bg-blue-500/20 transition"
-                >
-                  <item.icon className="w-5 h-5" />
-                </motion.div>
-                <div>
-                  <p className="text-xs text-zinc-500 uppercase tracking-wider">{item.label}</p>
-                  <p className="text-sm text-zinc-300 group-hover:text-white transition font-medium">
-                    {item.value}
-                  </p>
-                </div>
-              </motion.a>
-            ))}
+          <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-500/10 text-blue-400 ring-1 ring-blue-500/20">
+            <Mail className="h-6 w-6" />
           </div>
-
-          {/* Redes sociales - Mobile solo */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4, duration: 0.5 }}
-            viewport={{ once: true, margin: "-100px" }}
-            className="lg:hidden mt-8 pt-8 border-t border-zinc-800"
-          >
-            <p className="text-sm text-zinc-500 mb-4 uppercase tracking-wider">Sígueme en redes</p>
-            <div className="flex gap-4">
-              {socialLinks.map((social, index) => (
-                <motion.a
-                  key={index}
-                  href={social.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="p-3 rounded-xl border border-zinc-800 hover:border-blue-500 hover:bg-blue-500/10 transition group glass-card"
-                  aria-label={social.label}
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: 0.5 + index * 0.1 }}
-                  viewport={{ once: true, margin: "-100px" }}
-                >
-                  <social.icon className="w-5 h-5 text-zinc-400 group-hover:text-white transition" />
-                </motion.a>
-              ))}
-            </div>
-          </motion.div>
+          <h2 className="text-4xl md:text-5xl font-bold mb-4">
+            ¿Hablamos?
+          </h2>
+          <div className="mx-auto mb-5 h-1 w-20 rounded-full bg-gradient-to-r from-blue-500 to-purple-500"></div>
+          <p className="mx-auto max-w-2xl text-lg leading-relaxed text-zinc-400">
+            Si quieres compartir feedback sobre este portfolio, comentar alguna de mis aplicaciones o hablar sobre un proyecto, escríbeme. Estaré encantado de leerte.
+          </p>
         </motion.div>
 
         {/* Formulario */}
         <motion.div
-          initial={{ opacity: 0, x: 30 }}
-          whileInView={{ opacity: 1, x: 0 }}
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           viewport={{ once: true, margin: "-100px" }}
-          className="lg:col-span-2"
+          className="relative overflow-hidden rounded-3xl border border-zinc-800/80 bg-zinc-900/40 p-6 shadow-2xl shadow-blue-950/10 backdrop-blur-sm md:p-10"
         >
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+          <div className="pointer-events-none absolute -right-24 -top-24 h-56 w-56 rounded-full bg-blue-500/10 blur-3xl" />
+          <div className="pointer-events-none absolute -bottom-24 -left-24 h-56 w-56 rounded-full bg-purple-500/10 blur-3xl" />
+          <div className="relative mb-8 flex items-center justify-between border-b border-zinc-800/80 pb-5">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-blue-400">Contacto</p>
+              <h3 className="mt-1 text-xl font-semibold text-white">Envíame un mensaje</h3>
+            </div>
+            <div className="hidden rounded-full border border-emerald-500/20 bg-emerald-500/10 px-3 py-1.5 text-xs text-emerald-300 sm:block">
+              Respondo por email
+            </div>
+          </div>
+          <form onSubmit={handleSubmit(onSubmit)} className="grid gap-6 md:grid-cols-2">
             {/* Nombre */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -224,7 +144,7 @@ export default function Contact() {
               </label>
               <Input
                 {...register("name")}
-                placeholder="Tu nombre"
+                placeholder="Cómo te llamas"
                 className={`w-full bg-zinc-900/50 border ${
                   errors.name
                     ? "border-red-500 focus:border-red-500"
@@ -305,13 +225,14 @@ export default function Contact() {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 }}
               viewport={{ once: true }}
+              className="md:col-span-2"
             >
               <label className="block text-sm font-medium text-zinc-300 mb-2">
                 Mensaje <span className="text-red-400">*</span>
               </label>
               <textarea
                 {...register("message")}
-                placeholder="Cuéntame sobre tu proyecto..."
+                placeholder="Escribe tu comentario, sugerencia o pregunta..."
                 className={`w-full p-3 bg-zinc-900/50 border rounded-lg focus:outline-none text-white placeholder:text-zinc-500 h-32 resize-none transition ${
                   errors.message
                     ? "border-red-500 focus:border-red-500"
@@ -362,6 +283,7 @@ export default function Contact() {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4 }}
               viewport={{ once: true }}
+              className="md:col-span-2"
             >
               <Button
                 type="submit"
@@ -402,7 +324,7 @@ export default function Contact() {
                   initial={{ opacity: 0, y: -20 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
-                  className="p-4 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 flex items-start gap-3"
+                  className="p-4 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 flex items-start gap-3 md:col-span-2"
                 >
                   <AlertCircle className="w-5 h-5 flex-shrink-0 mt-0.5" />
                   <div>
@@ -414,76 +336,12 @@ export default function Contact() {
             </AnimatePresence>
 
             {/* Campos requeridos */}
-            <p className="text-xs text-zinc-500 text-center">
+            <p className="text-xs text-zinc-500 text-center md:col-span-2">
               Los campos marcados con <span className="text-red-400">*</span> son obligatorios
             </p>
           </form>
         </motion.div>
 
-        {/* Redes sociales - Desktop: columna derecha */}
-        <motion.div
-          initial={{ opacity: 0, x: 30 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          viewport={{ once: true, margin: "-100px" }}
-          className="hidden lg:block lg:col-span-1"
-        >
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true, margin: "-100px" }}
-            className="mb-8"
-          >
-            <h3 className="text-xl font-bold mb-4">
-              Sígueme en <span className="gradient-text">redes</span>
-            </h3>
-            <div className="w-16 h-1 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full"></div>
-          </motion.div>
-
-          <div className="flex flex-col gap-3">
-            {socialLinks.map((social, index) => (
-              <motion.a
-                key={index}
-                href={social.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-3 p-4 rounded-xl border border-zinc-800 hover:border-blue-500 hover:bg-blue-500/10 transition group glass-card"
-                aria-label={social.label}
-                initial={{ opacity: 0, x: 20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.3 + index * 0.1, duration: 0.5 }}
-                viewport={{ once: true, margin: "-100px" }}
-              >
-                <motion.div
-                  className="p-2 rounded-lg bg-zinc-900 text-zinc-400 group-hover:text-blue-400 group-hover:bg-blue-500/20 transition"
-                >
-                  <social.icon className="w-5 h-5" />
-                </motion.div>
-                <span className="text-sm text-zinc-300 group-hover:text-white transition font-medium">{social.label}</span>
-              </motion.a>
-            ))}
-          </div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.6, duration: 0.5 }}
-            viewport={{ once: true, margin: "-100px" }}
-            className="mt-8 p-6 rounded-xl glass-card"
-          >
-            <p className="text-sm text-zinc-400 mb-3">
-              ¿Prefieres contacto directo?
-            </p>
-            <a
-              href={`mailto:${contactInfo[0].value}`}
-              className="inline-flex items-center gap-2 text-blue-400 hover:text-blue-300 transition text-sm font-medium"
-            >
-              <Mail className="w-4 h-4" />
-              Envíame un email
-            </a>
-          </motion.div>
-        </motion.div>
       </div>
     </section>
   );
