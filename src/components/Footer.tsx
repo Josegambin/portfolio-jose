@@ -2,14 +2,17 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { GithubIcon, LinkedinIcon, TwitterIcon } from "@/components/icons";
+import { ArrowUp } from "lucide-react";
+import { portfolio } from "@/data/portfolio";
 
 export default function Footer() {
   const [showScrollTop, setShowScrollTop] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
-      setShowScrollTop(window.scrollY > 500);
+      setShowScrollTop(window.scrollY > 200);
     };
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
@@ -24,17 +27,27 @@ export default function Footer() {
   return (
     <>
       {/* Botón Volver arriba */}
-      <button
-        onClick={scrollToTop}
-        className={`fixed bottom-8 right-8 z-50 p-3 rounded-full bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg shadow-blue-500/25 transition-all duration-300 hover:scale-110 hover:shadow-blue-500/40 ${
-          showScrollTop
-            ? "opacity-100 translate-y-0"
-            : "opacity-0 translate-y-10 pointer-events-none"
-        }`}
-        aria-label="Volver arriba"
-      >
-    
-      </button>
+      <AnimatePresence>
+        {showScrollTop && (
+          <motion.button
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.8 }}
+            transition={{ duration: 0.3 }}
+            onClick={scrollToTop}
+            className="p-4 rounded-full btn-primary text-white shadow-lg shadow-blue-500/25"
+            style={{ 
+              position: 'fixed', 
+              right: '32px', 
+              bottom: '32px',
+              zIndex: 9999 
+            }}
+            aria-label="Volver arriba"
+          >
+            <ArrowUp className="w-5 h-5" />
+          </motion.button>
+        )}
+      </AnimatePresence>
 
       {/* Footer */}
       <footer className="relative bg-zinc-950/50 border-t border-zinc-800/50">
@@ -44,59 +57,61 @@ export default function Footer() {
         <div className="container mx-auto px-6 py-16">
           <div className="grid md:grid-cols-4 gap-8">
             {/* Columna 1: Marca */}
-            <div className="md:col-span-2">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              viewport={{ once: true }}
+              className="md:col-span-2"
+            >
               <h3 className="text-2xl font-bold mb-4">
-                <span className="gradient-text">José Gambín</span>
+                <span className="gradient-text">{portfolio.shortName}</span>
               </h3>
               <p className="text-zinc-400 text-sm max-w-md leading-relaxed">
-                Desarrollador Full Stack especializado en aplicaciones empresariales. 
-                Transformo problemas complejos en soluciones simples mediante arquitectura 
-                limpia y buenas prácticas de desarrollo.
+                {portfolio.description}
               </p>
               
               {/* Redes sociales */}
               <div className="flex gap-4 mt-6">
-                <a
-                  href="https://github.com/Josegambin"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="p-2 rounded-lg bg-zinc-900/50 hover:bg-zinc-800 transition text-zinc-400 hover:text-white"
-                  aria-label="GitHub"
-                >
-                  <GithubIcon className="w-4 h-4" />
-                </a>
-                <a
-                  href="#"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="p-2 rounded-lg bg-zinc-900/50 hover:bg-zinc-800 transition text-zinc-400 hover:text-white"
-                  aria-label="LinkedIn"
-                >
-                  <LinkedinIcon className="w-4 h-4" />
-                </a>
-                <a
-                  href="#"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="p-2 rounded-lg bg-zinc-900/50 hover:bg-zinc-800 transition text-zinc-400 hover:text-white"
-                  aria-label="Twitter"
-                >
-                  <TwitterIcon className="w-4 h-4" />
-                </a>
+                {[
+                  { icon: GithubIcon, href: portfolio.github, label: "GitHub" },
+                  { icon: LinkedinIcon, href: `https://${portfolio.linkedin}`, label: "LinkedIn" },
+                  { icon: TwitterIcon, href: "#", label: "Twitter" },
+                ].map((social, index) => (
+                  <motion.a
+                    key={social.label}
+                    href={social.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="p-2 rounded-lg bg-zinc-900/50 hover:bg-zinc-800 transition text-zinc-400 hover:text-white border border-zinc-800/50 hover:border-blue-500/50"
+                    aria-label={social.label}
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: index * 0.1 }}
+                    viewport={{ once: true }}
+                  >
+                    <social.icon className="w-4 h-4" />
+                  </motion.a>
+                ))}
               </div>
-            </div>
+            </motion.div>
 
             {/* Columna 2: Navegación */}
-            <div>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+              viewport={{ once: true }}
+            >
               <h4 className="text-sm font-semibold text-zinc-300 uppercase tracking-wider mb-4">
                 Navegación
               </h4>
               <ul className="space-y-2.5">
-                {["Sobre mí", "Skills", "Proyectos", "Contacto"].map((item) => (
+                {["Sobre mí", "Skills", "Proyectos", "Contacto"].map((item, index) => (
                   <li key={item}>
-                    <a
+                    <motion.a
                       href={`#${item.toLowerCase().replace(/\s/g, '')}`}
-                      className="text-sm text-zinc-400 hover:text-white transition"
+                      className="text-sm text-zinc-400 hover:text-white transition inline-block"
                       onClick={(e) => {
                         e.preventDefault();
                         const href = item.toLowerCase().replace(/\s/g, '');
@@ -105,38 +120,47 @@ export default function Footer() {
                           element.scrollIntoView({ behavior: "smooth" });
                         }
                       }}
+                      initial={{ opacity: 0, x: -10 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.2 + index * 0.05 }}
+                      viewport={{ once: true }}
                     >
                       {item}
-                    </a>
+                    </motion.a>
                   </li>
                 ))}
               </ul>
-            </div>
+            </motion.div>
 
             {/* Columna 3: Contacto rápido */}
-            <div>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              viewport={{ once: true }}
+            >
               <h4 className="text-sm font-semibold text-zinc-300 uppercase tracking-wider mb-4">
                 Contacto
               </h4>
               <ul className="space-y-2.5 text-sm">
                 <li>
                   <a
-                    href="mailto:jose@example.com"
-                    className="text-zinc-400 hover:text-white transition"
+                    href={`mailto:${portfolio.email}`}
+                    className="text-zinc-400 hover:text-white transition inline-block"
                   >
-                    jose@example.com
+                    {portfolio.email}
                   </a>
                 </li>
                 <li className="text-zinc-400">
-                  +34 123 456 789
+                  {portfolio.phone}
                 </li>
                 <li className="text-zinc-400">
-                  Madrid, España
+                  {portfolio.location}
                 </li>
                 <li className="pt-2">
-                  <a
+                  <motion.a
                     href="#contact"
-                    className="inline-block px-4 py-2 text-sm rounded-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white transition hover:scale-105"
+                    className="inline-block px-4 py-2 text-sm rounded-full btn-primary text-white"
                     onClick={(e) => {
                       e.preventDefault();
                       const element = document.querySelector("#contact");
@@ -146,21 +170,30 @@ export default function Footer() {
                     }}
                   >
                     Contactar
-                  </a>
+                  </motion.a>
                 </li>
               </ul>
-            </div>
+            </motion.div>
           </div>
 
           {/* Barra inferior */}
-          <div className="mt-12 pt-8 border-t border-zinc-800/50 flex flex-col sm:flex-row justify-between items-center gap-4">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+            viewport={{ once: true }}
+            className="mt-12 pt-8 border-t border-zinc-800/50 flex flex-col sm:flex-row justify-between items-center gap-4"
+          >
             <p className="text-sm text-zinc-500">
-              © {currentYear} José Gambín. Todos los derechos reservados.
+              © {currentYear} {portfolio.name}. Todos los derechos reservados.
             </p>
             <p className="text-sm text-zinc-500 flex items-center gap-1">
-              Hecho con
+              Hecho con 
+              <span className="text-red-500">❤️</span> 
+              y 
+              <span className="text-blue-500">⚡</span>
             </p>
-          </div>
+          </motion.div>
         </div>
       </footer>
     </>

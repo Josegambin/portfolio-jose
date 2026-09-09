@@ -2,12 +2,66 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { ThemeProvider } from "next-themes";
 import "./globals.css";
+import { portfolio } from "@/data/portfolio";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "José Gambín · Full Stack Developer",
-  description: "Portfolio de José Gambín, desarrollador Full Stack especializado en Java, Spring Boot y aplicaciones web modernas.",
+  metadataBase: new URL('https://josegambin.dev'),
+  title: {
+    default: `${portfolio.shortName} · ${portfolio.role}`,
+    template: `%s · ${portfolio.shortName}`
+  },
+  description: portfolio.description,
+  keywords: ["Full Stack Developer", "Java 21", "Spring Boot", "Microservicios", "React", "TypeScript", "PostgreSQL", "Oracle SQL", "DevOps", "CI/CD", "Desarrollador Web", "Portfolio"],
+  authors: [{ name: portfolio.name }],
+  creator: portfolio.name,
+  manifest: "/manifest.json",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: portfolio.shortName,
+  },
+  formatDetection: {
+    telephone: false,
+  },
+  openGraph: {
+    type: "website",
+    locale: "es_ES",
+    url: "https://josegambin.dev",
+    title: `${portfolio.shortName} · ${portfolio.role}`,
+    description: portfolio.description,
+    siteName: `Portfolio ${portfolio.shortName}`,
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: `${portfolio.name} - ${portfolio.role}`
+      }
+    ]
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `${portfolio.shortName} · ${portfolio.role}`,
+    description: portfolio.description,
+    images: ["/og-image.png"],
+    creator: "@josegambin"
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
+  verification: {
+    google: "your-google-verification-code",
+  },
 };
 
 export default function RootLayout({

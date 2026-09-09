@@ -1,49 +1,167 @@
 import { NextRequest, NextResponse } from "next/server";
 import nodemailer from "nodemailer";
+import { z } from "zod";
+
+// Rate limiting simple usando memoria (para producción usar Redis)
+const rateLimit = new Map<string, { count: number; resetTime: number }>();
+
+const RATE_LIMIT_WINDOW = 60 * 60 * 1000; // 1 hora
+const RATE_LIMIT_MAX_REQUESTS = 5; // máximo 5 mensajes por hora
+
+function checkRateLimit(ip: string): boolean {
+  const now = Date.now();
+  const record = rateLimit.get(ip);
+
+  if (!record || now > record.resetTime) {
+    rateLimit.set(ip, { count: 1, resetTime: now + RATE_LIMIT_WINDOW });
+    return true;
+  }
+
+  if (record.count >= RATE_LIMIT_MAX_REQUESTS) {
+    return false;
+  }
+
+  record.count++;
+  return true;
+}
+
+// Schema de validación mejorado
+const contactSchema = z.object({
+  name: z.string()
+    .min(2, "El nombre debe tener al menos 2 caracteres")
+    .max(50, "El nombre no puede exceder 50 caracteres")
+    .regex(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s'-]+$/, "El nombre solo puede contener letras y espacios"),
+  email: z.string()
+    .email("Email inválido")
+    .max(100, "El email es demasiado largo")
+    .refine((email) => {
+      // Validación adicional de email
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return emailRegex.test(email);
+    }, "Formato de email inválido"),
+  message: z.string()
+    .min(10, "El mensaje debe tener al menos 10 caracteres")
+    .max(1000, "El mensaje no puede exceder 1000 caracteres")
+    .refine((message) => {
+      // Sanitización básica - detectar patrones sospechosos
+      const suspiciousPatterns = [
+        /<script/i,
+        /javascript:/i,
+        /onerror=/i,
+        /onclick=/i,
+      ];
+      return !suspiciousPatterns.some(pattern => pattern.test(message));
+    }, "El mensaje contiene contenido no permitido"),
+});
 
 export async function POST(req: NextRequest) {
   try {
-    const { name, email, message } = await req.json();
+    // Obtener IP del cliente
+    const ip = req.headers.get('x-forwarded-for') || 
+               req.headers.get('x-real-ip') || 
+               'unknown';
 
-    // Validar datos
-    if (!name || !email || !message) {
+    // Check rate limiting
+    if (!checkRateLimit(ip)) {
       return NextResponse.json(
-        { error: "Todos los campos son obligatorios" },
+        { error: "Has excedido el límite de mensajes. Por favor, espera antes de enviar otro." },
+        { status: 429 }
+      );
+    }
+
+    const body = await req.json();
+
+    // Validar datos con Zod
+    const validationResult = contactSchema.safeParse(body);
+    
+    if (!validationResult.success) {
+      const errors = validationResult.error.errors.map(err => ({
+        field: err.path[0],
+        message: err.message
+      }));
+      
+      return NextResponse.json(
+        { error: "Error de validación", details: errors },
         { status: 400 }
       );
     }
 
-    // Configurar transporter (usa tus credenciales en .env.local)
+    const { name, email, message } = validationResult.data;
+
+    // Verificar variables de entorno
+    if (!process.env.EMAIL_USER || !process.env.EMAIL_PASSWORD) {
+      console.error("Faltan credenciales de email");
+      return NextResponse.json(
+        { error: "Error de configuración del servidor" },
+        { status: 500 }
+      );
+    }
+
+    // Configurar transporter con opciones de seguridad
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASSWORD,
       },
+      // Opciones de seguridad adicionales
+      tls: {
+        rejectUnauthorized: true,
+      },
     });
+
+    // Sanitizar el mensaje para el email
+    const sanitizedMessage = message
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#x27;");
 
     const mailOptions = {
       from: process.env.EMAIL_USER,
-      to: process.env.EMAIL_USER, // Te envías a ti mismo
+      to: process.env.EMAIL_USER,
       subject: `Nuevo mensaje de ${name} - Portfolio`,
       html: `
-        <h2>📬 Nuevo mensaje de contacto</h2>
-        <p><strong>👤 Nombre:</strong> ${name}</p>
-        <p><strong>📧 Email:</strong> ${email}</p>
-        <p><strong>📝 Mensaje:</strong></p>
-        <p style="background: #f5f5f5; padding: 15px; border-radius: 8px;">${message}</p>
-        <hr />
-        <p style="color: #666; font-size: 12px;">Mensaje enviado desde el portfolio de José Gambín</p>
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+          <h2 style="color: #333;">📬 Nuevo mensaje de contacto</h2>
+          <div style="background: #f5f5f5; padding: 20px; border-radius: 8px; margin: 20px 0;">
+            <p><strong>👤 Nombre:</strong> ${name}</p>
+            <p><strong>📧 Email:</strong> ${email}</p>
+            <p><strong>📝 Mensaje:</strong></p>
+            <p style="background: white; padding: 15px; border-radius: 8px; border-left: 4px solid #3b82f6;">
+              ${sanitizedMessage}
+            </p>
+          </div>
+          <hr style="border: none; border-top: 1px solid #eee; margin: 20px 0;">
+          <p style="color: #666; font-size: 12px;">
+            Mensaje enviado desde el portfolio de José Gambín<br>
+            IP: ${ip}<br>
+            Fecha: ${new Date().toLocaleString('es-ES')}
+          </p>
+        </div>
       `,
     };
 
     await transporter.sendMail(mailOptions);
 
-    return NextResponse.json({ success: true }, { status: 200 });
+    return NextResponse.json({ 
+      success: true, 
+      message: "Mensaje enviado correctamente" 
+    }, { status: 200 });
+
   } catch (error) {
     console.error("Error enviando email:", error);
+    
+    // Error específico de nodemailer
+    if (error instanceof Error && error.message.includes('credentials')) {
+      return NextResponse.json(
+        { error: "Error de autenticación de email" },
+        { status: 500 }
+      );
+    }
+
     return NextResponse.json(
-      { error: "Error al enviar el mensaje" },
+      { error: "Error al enviar el mensaje. Por favor, intenta más tarde." },
       { status: 500 }
     );
   }

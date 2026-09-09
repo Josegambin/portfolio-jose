@@ -1,0 +1,13 @@
+{
+  "name": "José Gambín - Full Stack Developer",
+  "short_name": "José Gambín",
+  "description": "Portfolio de José Gambín, desarrollador Full Stack especializado en Java, Spring Boot y aplicaciones web modernas.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0a0a",
+  "theme_color": "#667eea",
+  "orientation": "portrait-primary",
+  "categories": ["portfolio", "developer", "technology"],
+  "lang": "es",
+  "dir": "ltr"
+}
