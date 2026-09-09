@@ -25,6 +25,15 @@ function checkRateLimit(ip: string): boolean {
   return true;
 }
 
+function escapeHtml(value: string): string {
+  return value
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#x27;");
+}
+
 // Schema de validación mejorado
 const contactSchema = z.object({
   name: z.string()
@@ -89,10 +98,13 @@ export async function POST(req: NextRequest) {
     const { name, email, message } = validationResult.data;
 
     // Verificar variables de entorno
-    if (!process.env.EMAIL_USER || !process.env.EMAIL_PASSWORD) {
+    const emailUser = process.env.EMAIL_USER?.trim();
+    const emailPassword = process.env.EMAIL_PASSWORD?.replace(/\s/g, "");
+
+    if (!emailUser || !emailPassword) {
       console.error("Faltan credenciales de email");
       return NextResponse.json(
-        { error: "Error de configuración del servidor" },
+        { error: "El servicio de email no está configurado. Revisa EMAIL_USER y EMAIL_PASSWORD." },
         { status: 500 }
       );
     }
@@ -101,8 +113,8 @@ export async function POST(req: NextRequest) {
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASSWORD,
+        user: emailUser,
+        pass: emailPassword,
       },
       // Opciones de seguridad adicionales
       tls: {
@@ -111,22 +123,22 @@ export async function POST(req: NextRequest) {
     });
 
     // Sanitizar el mensaje para el email
-    const sanitizedMessage = message
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;")
-      .replace(/'/g, "&#x27;");
+    const safeName = escapeHtml(name);
+    const safeEmail = escapeHtml(email);
+    const sanitizedMessage = escapeHtml(message);
+    const safeIp = escapeHtml(ip);
 
     const mailOptions = {
-      from: process.env.EMAIL_USER,
-      to: process.env.EMAIL_USER,
+      from: emailUser,
+      to: emailUser,
+      replyTo: email,
       subject: `Nuevo mensaje de ${name} - Portfolio`,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
           <h2 style="color: #333;">📬 Nuevo mensaje de contacto</h2>
           <div style="background: #f5f5f5; padding: 20px; border-radius: 8px; margin: 20px 0;">
-            <p><strong>👤 Nombre:</strong> ${name}</p>
-            <p><strong>📧 Email:</strong> ${email}</p>
+            <p><strong>👤 Nombre:</strong> ${safeName}</p>
+            <p><strong>📧 Email:</strong> ${safeEmail}</p>
             <p><strong>📝 Mensaje:</strong></p>
             <p style="background: white; padding: 15px; border-radius: 8px; border-left: 4px solid #3b82f6;">
               ${sanitizedMessage}
@@ -135,7 +147,7 @@ export async function POST(req: NextRequest) {
           <hr style="border: none; border-top: 1px solid #eee; margin: 20px 0;">
           <p style="color: #666; font-size: 12px;">
             Mensaje enviado desde el portfolio de José Gambín<br>
-            IP: ${ip}<br>
+            IP: ${safeIp}<br>
             Fecha: ${new Date().toLocaleString('es-ES')}
           </p>
         </div>
@@ -153,9 +165,12 @@ export async function POST(req: NextRequest) {
     console.error("Error enviando email:", error);
     
     // Error específico de nodemailer
-    if (error instanceof Error && error.message.includes('credentials')) {
+    if (
+      error instanceof Error &&
+      (/EAUTH|authentication|invalid login|username and password/i.test(error.message))
+    ) {
       return NextResponse.json(
-        { error: "Error de autenticación de email" },
+        { error: "Gmail ha rechazado las credenciales. Usa una contraseña de aplicación válida." },
         { status: 500 }
       );
     }

@@ -35,6 +35,15 @@ EMAIL_PASSWORD=tu-app-password
 ```
 
 `EMAIL_PASSWORD` debe ser una contraseña de aplicación de Gmail, no la contraseña habitual de la cuenta.
+El archivo debe llamarse exactamente `.env.local` y estar junto a `package.json`. Puedes copiar `.env.example` como plantilla. Después de crearlo o modificarlo, reinicia `npm run dev`.
+
+Para generar la contraseña:
+
+1. Activa la verificación en dos pasos en tu cuenta de Google.
+2. Abre [Contraseñas de aplicaciones](https://myaccount.google.com/apppasswords).
+3. Crea una contraseña para este portfolio y copia sus 16 caracteres en `EMAIL_PASSWORD`.
+
+No publiques `.env.local` ni subas sus valores a GitHub. En Vercel, configura las mismas variables en `Settings > Environment Variables`.
 
 ## Comandos
 
