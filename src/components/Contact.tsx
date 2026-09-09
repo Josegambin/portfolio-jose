@@ -6,7 +6,6 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { motion, AnimatePresence } from "framer-motion";
-import { supabase } from "@/lib/supabase";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { 
@@ -17,7 +16,7 @@ import {
   MapPin, 
   Phone
 } from "lucide-react";
-import { GithubIcon as GithubIconSvg, LinkedinIcon as LinkedinIconSvg, TwitterIcon as TwitterIconSvg } from "@/components/icons";
+import { GithubIcon as GithubIconSvg, LinkedinIcon as LinkedinIconSvg } from "@/components/icons";
 
 // Schema de validación con Zod
 const contactSchema = z.object({
@@ -51,14 +50,13 @@ const contactInfo = [
     icon: MapPin,
     label: "Ubicación",
     value: "Cox - Alicante, España",
-    href: "#"
+    href: "https://www.google.com/maps/search/?api=1&query=Cox%2C%20Alicante%2C%20Espana"
   }
 ];
 
 const socialLinks = [
   { icon: GithubIconSvg, href: "https://github.com/Josegambin", label: "GitHub" },
   { icon: LinkedinIconSvg, href: "https://linkedin.com/in/jose-gambin", label: "LinkedIn" },
-  { icon: TwitterIconSvg, href: "#", label: "Twitter" },
 ];
 
 export default function Contact() {
@@ -91,24 +89,30 @@ export default function Contact() {
   async function onSubmit(data: ContactFormData) {
     setLoading(true);
     setSubmitStatus("idle");
+    setErrorMessage("");
 
     try {
-      const { error } = await supabase.from("contacts").insert([
-        {
-          name: data.name,
-          email: data.email,
-          message: data.message,
-        },
-      ]);
+      const response = await fetch("/api/contacts", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
 
-      if (error) throw error;
+      const result: { error?: string } = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || "No se pudo enviar el mensaje.");
+      }
 
       setSubmitStatus("success");
       reset();
     } catch (error) {
       setSubmitStatus("error");
-      setErrorMessage("Hubo un error al enviar el mensaje. Por favor, intenta de nuevo.");
-      console.error("Error sending message:", error);
+      setErrorMessage(
+        error instanceof Error
+          ? error.message
+          : "Hubo un error al enviar el mensaje. Por favor, intenta de nuevo."
+      );
     } finally {
       setLoading(false);
     }

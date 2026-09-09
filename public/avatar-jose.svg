@@ -1,0 +1,36 @@
+<svg width="720" height="840" viewBox="0 0 720 840" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="background" x1="80" y1="40" x2="650" y2="800" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#172554"/>
+      <stop offset="0.48" stop-color="#312E81"/>
+      <stop offset="1" stop-color="#581C87"/>
+    </linearGradient>
+    <linearGradient id="shirt" x1="150" y1="510" x2="570" y2="820" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#2563EB"/>
+      <stop offset="1" stop-color="#7C3AED"/>
+    </linearGradient>
+    <linearGradient id="skin" x1="290" y1="180" x2="465" y2="480" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F6C7A5"/>
+      <stop offset="1" stop-color="#D9906D"/>
+    </linearGradient>
+    <filter id="blur" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="42"/>
+    </filter>
+  </defs>
+  <rect width="720" height="840" rx="42" fill="url(#background)"/>
+  <circle cx="120" cy="120" r="150" fill="#60A5FA" fill-opacity="0.22" filter="url(#blur)"/>
+  <circle cx="610" cy="680" r="180" fill="#C084FC" fill-opacity="0.2" filter="url(#blur)"/>
+  <path d="M85 840C103 651 211 548 360 548C509 548 617 651 635 840H85Z" fill="url(#shirt)"/>
+  <path d="M267 526L360 626L453 526V455H267V526Z" fill="url(#skin)"/>
+  <path d="M244 250C244 147 312 89 383 89C477 89 529 159 518 274L500 414C491 484 437 532 365 532C293 532 238 480 229 411L215 302C211 275 225 258 244 250Z" fill="url(#skin)"/>
+  <path d="M220 267C199 166 260 63 381 63C488 63 552 139 524 267L473 229C449 205 437 166 431 128C383 190 316 217 220 267Z" fill="#1F2937"/>
+  <path d="M224 269C238 224 286 189 328 181C393 168 426 126 436 96C450 158 469 198 514 229L509 271C468 246 437 214 424 184C374 245 302 270 224 269Z" fill="#111827"/>
+  <ellipse cx="301" cy="326" rx="11" ry="15" fill="#1F2937"/>
+  <ellipse cx="424" cy="326" rx="11" ry="15" fill="#1F2937"/>
+  <path d="M327 405C349 421 379 421 401 405" stroke="#9A4F45" stroke-width="10" stroke-linecap="round"/>
+  <path d="M177 840C192 676 258 597 360 597C462 597 528 676 543 840H177Z" fill="url(#shirt)"/>
+  <path d="M298 602L360 671L422 602L408 562H312L298 602Z" fill="#E5E7EB" fill-opacity="0.9"/>
+  <circle cx="588" cy="126" r="7" fill="#BFDBFE"/>
+  <circle cx="620" cy="158" r="4" fill="#DDD6FE"/>
+  <path d="M80 705H150M570 735H640" stroke="white" stroke-opacity="0.18" stroke-width="2" stroke-linecap="round"/>
+</svg>

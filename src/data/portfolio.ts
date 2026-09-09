@@ -12,6 +12,7 @@ export const portfolio = {
     "Desarrollador Full Stack / Backend con más de 7 años de experiencia en consultoría tecnológica de alto nivel. Especializado en el ecosistema Java (Spring Boot, Microservicios) e integración de arquitecturas SPA con React.",
   fullDescription:
     "Trayectoria contrastada en el diseño de APIs REST, optimización de bases de datos de gran envergadura (Oracle, PostgreSQL) y automatización de despliegues (CI/CD). Capacidad analítica demostrada para transformar requisitos funcionales complejos en software escalable y de alta disponibilidad para grandes clientes como Telefónica, Naturgy y Adif.",
+  availability: "Disponible para oportunidades Full Stack y Backend",
   skills: [
     { name: "Java 21", level: 95, icon: "☕" },
     { name: "Spring Boot", level: 90, icon: "🌱" },
@@ -19,8 +20,8 @@ export const portfolio = {
     { name: "TypeScript", level: 80, icon: "📘" },
     { name: "PostgreSQL", level: 85, icon: "🐘" },
     { name: "Oracle SQL", level: 80, icon: "🗄️" },
-    { name: "Microservicios", level: 85, icon: "�" },
-    { name: "CI/CD", level: 80, icon: "�" },
+    { name: "Microservicios", level: 85, icon: "🔗" },
+    { name: "CI/CD", level: 80, icon: "🚀" },
   ],
   skillCategories: {
     backend: {
@@ -45,7 +46,7 @@ export const portfolio = {
     },
     methodologies: {
       title: "Metodologías",
-      icon: "�",
+      icon: "🧩",
       skills: ["Agile/Scrum", "Jira", "Testing Unitario", "Mockito", "JUnit"]
     }
   },

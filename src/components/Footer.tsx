@@ -3,7 +3,7 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { GithubIcon, LinkedinIcon, TwitterIcon } from "@/components/icons";
+import { GithubIcon, LinkedinIcon } from "@/components/icons";
 import { ArrowUp } from "lucide-react";
 import { portfolio } from "@/data/portfolio";
 
@@ -76,7 +76,6 @@ export default function Footer() {
                 {[
                   { icon: GithubIcon, href: portfolio.github, label: "GitHub" },
                   { icon: LinkedinIcon, href: `https://${portfolio.linkedin}`, label: "LinkedIn" },
-                  { icon: TwitterIcon, href: "#", label: "Twitter" },
                 ].map((social, index) => (
                   <motion.a
                     key={social.label}
@@ -107,15 +106,20 @@ export default function Footer() {
                 Navegación
               </h4>
               <ul className="space-y-2.5">
-                {["Sobre mí", "Skills", "Proyectos", "Contacto"].map((item, index) => (
-                  <li key={item}>
+                {[
+                  { label: "Sobre mí", href: "#about" },
+                  { label: "Experiencia", href: "#experience" },
+                  { label: "Skills", href: "#skills" },
+                  { label: "Proyectos", href: "#projects" },
+                  { label: "Contacto", href: "#contact" },
+                ].map((item, index) => (
+                  <li key={item.label}>
                     <motion.a
-                      href={`#${item.toLowerCase().replace(/\s/g, '')}`}
+                      href={item.href}
                       className="text-sm text-zinc-400 hover:text-white transition inline-block"
                       onClick={(e) => {
                         e.preventDefault();
-                        const href = item.toLowerCase().replace(/\s/g, '');
-                        const element = document.querySelector(`#${href}`);
+                        const element = document.querySelector(item.href);
                         if (element) {
                           element.scrollIntoView({ behavior: "smooth" });
                         }
@@ -125,7 +129,7 @@ export default function Footer() {
                       transition={{ delay: 0.2 + index * 0.05 }}
                       viewport={{ once: true }}
                     >
-                      {item}
+                      {item.label}
                     </motion.a>
                   </li>
                 ))}

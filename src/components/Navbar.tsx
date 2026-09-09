@@ -3,8 +3,8 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X } from "lucide-react";
-import { GithubIcon, LinkedinIcon, TwitterIcon } from "@/components/icons";
+import { Download, Menu, X } from "lucide-react";
+import { GithubIcon, LinkedinIcon } from "@/components/icons";
 import { portfolio } from "@/data/portfolio";
 
 const navItems = [
@@ -18,6 +18,7 @@ const navItems = [
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [activeSection, setActiveSection] = useState("about");
 
   useEffect(() => {
     const handleScroll = () => {
@@ -27,8 +28,31 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  useEffect(() => {
+    const sections = navItems
+      .map((item) => document.querySelector(item.href))
+      .filter((section): section is Element => section !== null);
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visibleSections = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+
+        if (visibleSections[0]) {
+          setActiveSection(visibleSections[0].target.id);
+        }
+      },
+      { rootMargin: "-25% 0px -60% 0px", threshold: 0 }
+    );
+
+    sections.forEach((section) => observer.observe(section));
+    return () => observer.disconnect();
+  }, []);
+
   const handleNavClick = (href: string) => {
     setIsOpen(false);
+    setActiveSection(href.slice(1));
     const element = document.querySelector(href);
     if (element) {
       element.scrollIntoView({ behavior: "smooth" });
@@ -70,7 +94,12 @@ export default function Navbar() {
             <motion.a
               key={item.label}
               href={item.href}
-              className="text-sm text-zinc-400 hover:text-white transition relative group"
+              className={`text-sm transition relative group ${
+                activeSection === item.href.slice(1)
+                  ? "text-white"
+                  : "text-zinc-400 hover:text-white"
+              }`}
+              aria-current={activeSection === item.href.slice(1) ? "location" : undefined}
               onClick={(e) => {
                 e.preventDefault();
                 handleNavClick(item.href);
@@ -82,7 +111,8 @@ export default function Navbar() {
               {item.label}
               <motion.span
                 className="absolute -bottom-1 left-0 h-0.5 bg-blue-500"
-                initial={{ width: 0 }}
+                initial={false}
+                animate={{ width: activeSection === item.href.slice(1) ? "100%" : 0 }}
                 transition={{ duration: 0.3 }}
               />
             </motion.a>
@@ -98,7 +128,6 @@ export default function Navbar() {
             {[
               { icon: GithubIcon, href: portfolio.github, label: "GitHub" },
               { icon: LinkedinIcon, href: `https://${portfolio.linkedin}`, label: "LinkedIn" },
-              { icon: TwitterIcon, href: "#", label: "Twitter" },
             ].map((social, index) => (
               <motion.a
                 key={social.label}
@@ -125,6 +154,15 @@ export default function Navbar() {
           >
             Contactar
           </motion.button>
+          <motion.a
+            href="/cv-jose-gambin.pdf"
+            download
+            className="inline-flex items-center gap-2 text-sm text-zinc-300 hover:text-white transition"
+            aria-label="Descargar CV en PDF"
+          >
+            <Download className="w-4 h-4" />
+            CV
+          </motion.a>
         </div>
 
         {/* Mobile Navigation Toggle */}
@@ -178,7 +216,12 @@ export default function Navbar() {
                   <motion.a
                     key={item.label}
                     href={item.href}
-                    className="text-zinc-400 hover:text-white transition py-3 px-4 hover:bg-zinc-900/50 rounded-lg text-center"
+                    className={`transition py-3 px-4 rounded-lg text-center ${
+                      activeSection === item.href.slice(1)
+                        ? "text-white bg-blue-500/10"
+                        : "text-zinc-400 hover:text-white hover:bg-zinc-900/50"
+                    }`}
+                    aria-current={activeSection === item.href.slice(1) ? "location" : undefined}
                     onClick={(e) => {
                       e.preventDefault();
                       handleNavClick(item.href);
@@ -200,7 +243,6 @@ export default function Navbar() {
                   {[
                     { icon: GithubIcon, href: portfolio.github },
                     { icon: LinkedinIcon, href: `https://${portfolio.linkedin}` },
-                    { icon: TwitterIcon, href: "#" },
                   ].map((social, index) => (
                     <motion.a
                       key={index}
@@ -223,6 +265,14 @@ export default function Navbar() {
                 >
                   Contactar
                 </motion.button>
+                <motion.a
+                  href="/cv-jose-gambin.pdf"
+                  download
+                  className="inline-flex items-center justify-center gap-2 text-zinc-300 hover:text-white transition py-3"
+                >
+                  <Download className="w-4 h-4" />
+                  Descargar CV
+                </motion.a>
               </motion.div>
             </motion.div>
           )}

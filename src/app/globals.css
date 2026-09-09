@@ -6,6 +6,23 @@
   --font-mono: var(--font-geist-mono);
 }
 
+:root {
+  color-scheme: dark;
+  --page-background: #09090b;
+  --page-foreground: #f4f4f5;
+}
+
+html:not(.dark) {
+  color-scheme: light;
+  --page-background: #f8fafc;
+  --page-foreground: #18181b;
+}
+
+body {
+  background: var(--page-background);
+  color: var(--page-foreground);
+}
+
 /* ===== ANIMACIONES ===== */
 @keyframes fadeIn {
   from {
@@ -371,4 +388,104 @@ html {
   background: linear-gradient(90deg, #1a1a1a 25%, #2a2a2a 50%, #1a1a1a 75%);
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
+}
+
+/* La interfaz usa clases oscuras por defecto; estas equivalencias mantienen
+   la misma jerarquía visual cuando el sistema prefiere el tema claro. */
+html:not(.dark) .bg-background {
+  background-color: var(--page-background);
+}
+
+html:not(.dark) .text-foreground,
+html:not(.dark) .text-white {
+  color: #18181b;
+}
+
+html:not(.dark) .text-zinc-300 {
+  color: #3f3f46;
+}
+
+html:not(.dark) .text-zinc-400 {
+  color: #52525b;
+}
+
+html:not(.dark) .text-zinc-500 {
+  color: #71717a;
+}
+
+html:not(.dark) .text-zinc-600 {
+  color: #a1a1aa;
+}
+
+html:not(.dark) .bg-zinc-950 {
+  background-color: #f1f5f9;
+}
+
+html:not(.dark) .bg-zinc-900,
+html:not(.dark) .bg-zinc-900\/50 {
+  background-color: rgba(255, 255, 255, 0.82);
+}
+
+html:not(.dark) .bg-zinc-800,
+html:not(.dark) .bg-zinc-800\/50,
+html:not(.dark) .bg-zinc-800\/30 {
+  background-color: rgba(226, 232, 240, 0.75);
+}
+
+html:not(.dark) .border-zinc-800,
+html:not(.dark) .border-zinc-800\/50,
+html:not(.dark) .border-zinc-800\/80,
+html:not(.dark) .border-zinc-700,
+html:not(.dark) .border-zinc-700\/50 {
+  border-color: #e2e8f0;
+}
+
+html:not(.dark) .glass {
+  background: rgba(255, 255, 255, 0.78);
+  border-color: rgba(148, 163, 184, 0.35);
+}
+
+html:not(.dark) .glass-light {
+  background: rgba(255, 255, 255, 0.72);
+  border-color: rgba(148, 163, 184, 0.28);
+}
+
+html:not(.dark) .glass-card {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.94), rgba(241, 245, 249, 0.82));
+  border-color: rgba(148, 163, 184, 0.35);
+  box-shadow: 0 8px 32px rgba(51, 65, 85, 0.12);
+}
+
+html:not(.dark) .glass-card:hover {
+  border-color: rgba(79, 70, 229, 0.35);
+  box-shadow: 0 12px 40px rgba(79, 70, 229, 0.14);
+}
+
+html:not(.dark) .grid-pattern {
+  background-image:
+    linear-gradient(rgba(79, 70, 229, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(79, 70, 229, 0.06) 1px, transparent 1px);
+}
+
+html:not(.dark) .card-hover:hover {
+  box-shadow: 0 20px 40px rgba(51, 65, 85, 0.16);
+}
+
+html:not(.dark) ::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+html:not(.dark) ::-webkit-scrollbar-thumb {
+  border-color: #f1f5f9;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
 }

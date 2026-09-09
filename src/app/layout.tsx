@@ -32,20 +32,11 @@ export const metadata: Metadata = {
     title: `${portfolio.shortName} · ${portfolio.role}`,
     description: portfolio.description,
     siteName: `Portfolio ${portfolio.shortName}`,
-    images: [
-      {
-        url: "/og-image.png",
-        width: 1200,
-        height: 630,
-        alt: `${portfolio.name} - ${portfolio.role}`
-      }
-    ]
   },
   twitter: {
     card: "summary_large_image",
     title: `${portfolio.shortName} · ${portfolio.role}`,
     description: portfolio.description,
-    images: ["/og-image.png"],
     creator: "@josegambin"
   },
   robots: {
@@ -59,9 +50,6 @@ export const metadata: Metadata = {
       'max-snippet': -1,
     },
   },
-  verification: {
-    google: "your-google-verification-code",
-  },
 };
 
 export default function RootLayout({
@@ -74,7 +62,7 @@ export default function RootLayout({
       <body className={inter.className}>
         <ThemeProvider
           attribute="class"
-          defaultTheme="light"
+          defaultTheme="system"
           enableSystem
           disableTransitionOnChange
         >
