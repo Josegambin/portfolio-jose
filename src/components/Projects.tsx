@@ -1,9 +1,14 @@
 "use client";
 
+import { useState } from "react";
 import { motion } from "framer-motion";
+import { Gamepad2, Play } from "lucide-react";
 import { projects } from "@/data/projects";
+import { games, Game } from "@/data/games";
+import GameModal from "@/components/games/GameModal";
 
 export default function Projects() {
+  const [selectedGame, setSelectedGame] = useState<Game | null>(null);
   const featuredProjects = projects.filter(p => p.featured);
   const otherProjects = projects.filter(p => !p.featured);
 
@@ -142,6 +147,98 @@ export default function Projects() {
             </div>
           </motion.div>
         )}
+
+        {/* Zona de Juegos Interactivos */}
+        <div id="games" className="mt-24 pt-12 border-t border-zinc-800/80 scroll-mt-24">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            className="mb-10"
+          >
+            <div className="flex items-center gap-2 mb-3">
+              <span className="px-3 py-1 text-xs font-semibold uppercase tracking-wider rounded-full bg-blue-500/10 border border-blue-500/30 text-blue-400 flex items-center gap-1.5">
+                <Gamepad2 className="w-3.5 h-3.5" /> Proyectos Interactivos & Arcade
+              </span>
+            </div>
+            <h3 className="text-3xl md:text-4xl font-bold text-white">
+              Zona de <span className="gradient-text">Juegos</span>
+            </h3>
+            <p className="text-zinc-400 text-sm md:text-base mt-2 max-w-2xl leading-relaxed">
+              Demos interactivas y videojuegos retro desarrollados con HTML5 Canvas, físicas en tiempo real y audio sintetizado. Haz clic en cualquiera de ellos para ejecutarlos en una ventana modal interactiva.
+            </p>
+          </motion.div>
+
+          {/* Grid de Tarjetas de Juegos */}
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {games.map((game, index) => (
+              <motion.div
+                key={game.id}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.1, duration: 0.5 }}
+                viewport={{ once: true }}
+                whileHover={{ y: -6 }}
+                className="glass-card p-6 rounded-2xl border border-zinc-800/80 hover:border-blue-500/40 transition-all flex flex-col justify-between group relative overflow-hidden"
+              >
+                {/* Glow decorativo */}
+                <div
+                  className={`absolute -top-10 -right-10 w-36 h-36 bg-gradient-to-bl ${game.accentGradient} opacity-15 blur-2xl group-hover:opacity-30 transition-opacity pointer-events-none`}
+                />
+
+                <div>
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="w-14 h-14 rounded-2xl bg-zinc-800/70 border border-zinc-700/60 flex items-center justify-center text-3xl group-hover:scale-110 transition-transform shadow-inner">
+                      {game.icon}
+                    </div>
+                    <span className="text-xs font-medium text-zinc-400 bg-zinc-800/60 px-3 py-1 rounded-full border border-zinc-700/50">
+                      {game.difficulty}
+                    </span>
+                  </div>
+
+                  <h4 className="text-xl font-bold text-white mb-1 group-hover:text-blue-400 transition-colors">
+                    {game.title}
+                  </h4>
+                  <p className="text-xs text-blue-400/90 font-medium mb-3">
+                    {game.subtitle}
+                  </p>
+
+                  <p className="text-sm text-zinc-400 mb-6 leading-relaxed">
+                    {game.description}
+                  </p>
+
+                  <div className="flex flex-wrap gap-1.5 mb-6">
+                    {game.technologies.map((tech) => (
+                      <span
+                        key={tech}
+                        className="text-xs text-zinc-300 bg-zinc-800/50 border border-zinc-700/40 px-2.5 py-1 rounded-md"
+                      >
+                        {tech}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={() => setSelectedGame(game)}
+                  className="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-semibold text-sm flex items-center justify-center gap-2 shadow-lg shadow-blue-500/20 cursor-pointer transition-all"
+                >
+                  <Play className="w-4 h-4 fill-white" />
+                  <span>Jugar ahora</span>
+                </motion.button>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+
+        {/* Modal Window para la ejecución del juego */}
+        <GameModal
+          game={selectedGame}
+          onClose={() => setSelectedGame(null)}
+        />
       </motion.div>
     </section>
   );

@@ -11,6 +11,7 @@ const navItems = [
   { label: "Sobre mí", href: "#about" },
   { label: "Skills", href: "#skills" },
   { label: "Proyectos", href: "#projects" },
+  { label: "Juegos", href: "#games" },
   { label: "Contacto", href: "#contact" },
 ];
 
