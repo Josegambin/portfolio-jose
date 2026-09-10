@@ -2,15 +2,27 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Gamepad2, Play } from "lucide-react";
+import { ExternalLink, Gamepad2, Play, X } from "lucide-react";
 import { projects } from "@/data/projects";
 import { games, Game } from "@/data/games";
 import GameModal from "@/components/games/GameModal";
 
 export default function Projects() {
   const [selectedGame, setSelectedGame] = useState<Game | null>(null);
+  const [demoUrl, setDemoUrl] = useState<string | null>(null);
   const featuredProjects = projects.filter(p => p.featured);
   const otherProjects = projects.filter(p => !p.featured);
+
+  const openDemo = (url: string | null | undefined) => {
+    if (!url) return;
+    setDemoUrl(url);
+    document.body.style.overflow = "hidden";
+  };
+
+  const closeDemo = () => {
+    setDemoUrl(null);
+    document.body.style.overflow = "auto";
+  };
 
   return (
     <section id="projects" className="py-24 relative">
@@ -83,25 +95,40 @@ export default function Projects() {
                 )}
               </div>
               
-              {project.github ? (
-                <motion.a
-                  href={project.github}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  whileHover={{ x: 5 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="inline-flex items-center gap-2 text-blue-400 font-semibold hover:text-blue-300 transition-colors text-sm"
-                >
-                  Ver código en GitHub
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                  </svg>
-                </motion.a>
-              ) : (
-                <span className="text-xs text-zinc-500">
-                  Proyecto profesional · código privado
-                </span>
-              )}
+              <div className="flex flex-wrap items-center gap-3">
+                {project.github ? (
+                  <motion.a
+                    href={project.github}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    whileHover={{ x: 5 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="inline-flex items-center gap-2 text-blue-400 font-semibold hover:text-blue-300 transition-colors text-sm"
+                  >
+                    Ver código en GitHub
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                    </svg>
+                  </motion.a>
+                ) : (
+                  <span className="text-xs text-zinc-500">
+                    Proyecto profesional · código privado
+                  </span>
+                )}
+
+                {project.demo && (
+                  <motion.button
+                    type="button"
+                    whileHover={{ x: 5 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => openDemo(project.demo)}
+                    className="inline-flex items-center gap-2 text-blue-400 font-semibold hover:text-blue-300 transition-colors text-sm"
+                  >
+                    <ExternalLink className="w-4 h-4" />
+                    Ver demo
+                  </motion.button>
+                )}
+              </div>
             </motion.div>
           ))}
         </div>
@@ -239,6 +266,33 @@ export default function Projects() {
             ))}
           </div>
         </div>
+
+        {demoUrl && (
+          <div
+            className="fixed inset-0 z-[60] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4"
+            onClick={closeDemo}
+          >
+            <div
+              className="relative w-full max-w-6xl h-[80vh] rounded-2xl border border-zinc-800 bg-zinc-950 shadow-2xl"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <button
+                onClick={closeDemo}
+                className="absolute right-4 top-4 z-10 rounded-full bg-zinc-900/80 px-3 py-2 text-white hover:bg-zinc-800 transition"
+                aria-label="Cerrar demo"
+              >
+                <X className="w-5 h-5" />
+              </button>
+
+              <iframe
+                src={demoUrl}
+                title="Finance Tracker"
+                className="h-full w-full rounded-2xl border-0"
+                allow="fullscreen"
+              />
+            </div>
+          </div>
+        )}
 
         {/* Modal Window para la ejecución del juego */}
         <GameModal

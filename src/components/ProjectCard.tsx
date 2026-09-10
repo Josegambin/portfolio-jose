@@ -12,8 +12,8 @@ interface ProjectCardProps {
     title: string;
     description: string;
     tech: string[];
-    github: string;
-    demo: string;
+    github: string | null;
+    demo?: string | null;
     image: string;
     featured: boolean;
     category: string;
@@ -28,6 +28,18 @@ interface ProjectCardProps {
 
 export default function ProjectCard({ project, index }: ProjectCardProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDemoModalOpen, setIsDemoModalOpen] = useState(false);
+
+  const openDemoModal = () => {
+    if (!project.demo) return;
+    setIsDemoModalOpen(true);
+    document.body.style.overflow = "hidden";
+  };
+
+  const closeDemoModal = () => {
+    setIsDemoModalOpen(false);
+    document.body.style.overflow = "auto";
+  };
 
   return (
     <>
@@ -72,7 +84,11 @@ export default function ProjectCard({ project, index }: ProjectCardProps) {
               size="sm"
               variant="outline"
               className="border-white/20 text-white hover:bg-white/10 hover:border-white/40"
-              onClick={() => window.open(project.github, "_blank")}
+              onClick={() => {
+                if (project.github) {
+                  window.open(project.github, "_blank", "noopener,noreferrer");
+                }
+              }}
             >
               <GithubIcon className="w-4 h-4" />
             </Button>
@@ -111,23 +127,27 @@ export default function ProjectCard({ project, index }: ProjectCardProps) {
           </div>
 
           <div className="flex items-center gap-4 pt-4 border-t border-zinc-800/50">
-            <a
-              href={project.github}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-sm text-zinc-400 hover:text-white transition flex items-center gap-1.5"
-            >
-              <GithubIcon className="w-4 h-4" /> Código
-            </a>
-            {project.demo && (
+            {project.github ? (
               <a
-                href={project.demo}
+                href={project.github}
                 target="_blank"
                 rel="noopener noreferrer"
+                className="text-sm text-zinc-400 hover:text-white transition flex items-center gap-1.5"
+              >
+                <GithubIcon className="w-4 h-4" /> Código
+              </a>
+            ) : (
+              <span className="text-sm text-zinc-500">
+                Código privado
+              </span>
+            )}
+            {project.demo && (
+              <button
+                onClick={openDemoModal}
                 className="text-sm text-blue-400 hover:text-blue-300 transition flex items-center gap-1.5"
               >
                 <ExternalLink className="w-4 h-4" /> Demo
-              </a>
+              </button>
             )}
             <button
               onClick={() => setIsModalOpen(true)}
@@ -200,26 +220,53 @@ export default function ProjectCard({ project, index }: ProjectCardProps) {
               )}
 
               <div className="flex gap-4 pt-4 border-t border-zinc-800">
-                <a
-                  href={project.github}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex-1 text-center py-2 rounded-lg bg-zinc-800 hover:bg-zinc-700 transition text-white"
-                >
-                  <GithubIcon className="w-4 h-4 inline mr-2" /> Ver código
-                </a>
-                {project.demo && (
+                {project.github && (
                   <a
-                    href={project.demo}
+                    href={project.github}
                     target="_blank"
                     rel="noopener noreferrer"
+                    className="flex-1 text-center py-2 rounded-lg bg-zinc-800 hover:bg-zinc-700 transition text-white"
+                  >
+                    <GithubIcon className="w-4 h-4 inline mr-2" /> Ver código
+                  </a>
+                )}
+                {project.demo && (
+                  <button
+                    onClick={openDemoModal}
                     className="flex-1 text-center py-2 rounded-lg bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 transition text-white"
                   >
                     <ExternalLink className="w-4 h-4 inline mr-2" /> Ver demo
-                  </a>
+                  </button>
                 )}
               </div>
             </div>
+          </div>
+        </div>
+      )}
+
+      {isDemoModalOpen && project.demo && (
+        <div
+          className="fixed inset-0 z-[60] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4"
+          onClick={closeDemoModal}
+        >
+          <div
+            className="relative w-full max-w-6xl h-[80vh] rounded-2xl border border-zinc-800 bg-zinc-950 shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              onClick={closeDemoModal}
+              className="absolute right-4 top-4 z-10 rounded-full bg-zinc-900/80 px-3 py-2 text-white hover:bg-zinc-800 transition"
+              aria-label="Cerrar demo"
+            >
+              <X className="w-5 h-5" />
+            </button>
+
+            <iframe
+              src={project.demo}
+              title={project.title}
+              className="h-full w-full rounded-2xl border-0"
+              allow="fullscreen"
+            />
           </div>
         </div>
       )}

@@ -6,6 +6,7 @@ export const projects = [
     technologies: ["Java 21", "Spring Boot", "React", "TypeScript", "PostgreSQL", "REST API"],
     icon: "📊",
     github: null,
+    demo: "http://localhost:5173",
     featured: true,
     period: "2026 - Presente"
   },
