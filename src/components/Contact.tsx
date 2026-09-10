@@ -40,13 +40,10 @@ export default function Contact() {
     handleSubmit,
     reset,
     formState: { errors, isDirty, isValid },
-    watch,
   } = useForm<ContactFormData>({
     resolver: zodResolver(contactSchema),
     mode: "onChange",
   });
-
-  const formValues = watch();
 
   useEffect(() => {
     if (submitStatus === "success") {
@@ -148,8 +145,6 @@ export default function Contact() {
                 className={`w-full bg-zinc-900/50 border ${
                   errors.name
                     ? "border-red-500 focus:border-red-500"
-                    : formValues.name && !errors.name
-                    ? "border-green-500 focus:border-green-500"
                     : "border-zinc-800 focus:border-blue-500"
                 } text-white placeholder:text-zinc-500 transition`}
               />
@@ -161,16 +156,6 @@ export default function Contact() {
                 >
                   <AlertCircle className="w-4 h-4" />
                   {errors.name.message}
-                </motion.p>
-              )}
-              {formValues.name && !errors.name && (
-                <motion.p
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="mt-1.5 text-sm text-green-400 flex items-center gap-1"
-                >
-                  <CheckCircle className="w-4 h-4" />
-                  Nombre válido
                 </motion.p>
               )}
             </motion.div>
@@ -192,8 +177,6 @@ export default function Contact() {
                 className={`w-full bg-zinc-900/50 border ${
                   errors.email
                     ? "border-red-500 focus:border-red-500"
-                    : formValues.email && !errors.email
-                    ? "border-green-500 focus:border-green-500"
                     : "border-zinc-800 focus:border-blue-500"
                 } text-white placeholder:text-zinc-500 transition`}
               />
@@ -205,16 +188,6 @@ export default function Contact() {
                 >
                   <AlertCircle className="w-4 h-4" />
                   {errors.email.message}
-                </motion.p>
-              )}
-              {formValues.email && !errors.email && (
-                <motion.p
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="mt-1.5 text-sm text-green-400 flex items-center gap-1"
-                >
-                  <CheckCircle className="w-4 h-4" />
-                  Email válido
                 </motion.p>
               )}
             </motion.div>
@@ -236,8 +209,6 @@ export default function Contact() {
                 className={`w-full p-3 bg-zinc-900/50 border rounded-lg focus:outline-none text-white placeholder:text-zinc-500 h-32 resize-none transition ${
                   errors.message
                     ? "border-red-500 focus:border-red-500"
-                    : formValues.message && !errors.message
-                    ? "border-green-500 focus:border-green-500"
                     : "border-zinc-800 focus:border-blue-500"
                 }`}
               />
@@ -251,27 +222,9 @@ export default function Contact() {
                     <AlertCircle className="w-4 h-4" />
                     {errors.message.message}
                   </motion.p>
-                ) : formValues.message && !errors.message ? (
-                  <motion.p
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="text-sm text-green-400 flex items-center gap-1"
-                  >
-                    <CheckCircle className="w-4 h-4" />
-                    Mensaje válido
-                  </motion.p>
                 ) : (
                   <span className="text-sm text-zinc-500">
-                    {formValues.message?.length || 0}/500 caracteres
-                  </span>
-                )}
-                {formValues.message && (
-                  <span className={`text-sm ${
-                    formValues.message.length > 450 
-                      ? 'text-yellow-400' 
-                      : 'text-zinc-500'
-                  }`}>
-                    {formValues.message.length}/500
+                    Mensaje listo para enviar
                   </span>
                 )}
               </div>

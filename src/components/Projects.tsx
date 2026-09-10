@@ -1,11 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { ExternalLink, Gamepad2, Play, X } from "lucide-react";
 import { projects } from "@/data/projects";
 import { games, Game } from "@/data/games";
 import GameModal from "@/components/games/GameModal";
+import { isAllowedDemoUrl } from "@/lib/demoSecurity";
 
 export default function Projects() {
   const [selectedGame, setSelectedGame] = useState<Game | null>(null);
@@ -13,15 +14,26 @@ export default function Projects() {
   const featuredProjects = projects.filter(p => p.featured);
   const otherProjects = projects.filter(p => !p.featured);
 
-  const openDemo = (url: string | null | undefined) => {
-    if (!url) return;
-    setDemoUrl(url);
+  useEffect(() => {
+    if (!demoUrl) {
+      document.body.style.overflow = "auto";
+      return undefined;
+    }
+
     document.body.style.overflow = "hidden";
+
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [demoUrl]);
+
+  const openDemo = (url: string | null | undefined) => {
+    if (!url || !isAllowedDemoUrl(url)) return;
+    setDemoUrl(url);
   };
 
   const closeDemo = () => {
     setDemoUrl(null);
-    document.body.style.overflow = "auto";
   };
 
   return (
@@ -289,6 +301,8 @@ export default function Projects() {
                 title="Finance Tracker"
                 className="h-full w-full rounded-2xl border-0"
                 allow="fullscreen"
+                referrerPolicy="no-referrer"
+                sandbox="allow-scripts allow-forms allow-same-origin allow-popups"
               />
             </div>
           </div>

@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="700" viewBox="0 0 1200 700">
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#0f172a"/>
+      <stop offset="1" stop-color="#111827"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="700" fill="url(#bg)"/>
+  <text x="600" y="50" fill="#e5e7eb" font-family="Arial" font-size="32" font-weight="700" text-anchor="middle">Portfolio Architecture</text>
+
+  <rect x="70" y="120" width="220" height="180" rx="12" fill="#1f2937" stroke="#93c5fd" stroke-width="2"/>
+  <text x="180" y="165" fill="#e5e7eb" font-family="Arial" font-size="22" font-weight="700" text-anchor="middle">Next.js App</text>
+  <text x="180" y="205" fill="#94a3b8" font-family="Arial" font-size="16" text-anchor="middle">App Router</text>
+  <text x="180" y="235" fill="#94a3b8" font-family="Arial" font-size="16" text-anchor="middle">Pages / Layout</text>
+  <text x="180" y="265" fill="#94a3b8" font-family="Arial" font-size="16" text-anchor="middle">SEO routes</text>
+
+  <rect x="360" y="120" width="250" height="180" rx="12" fill="#164e63" stroke="#67e8f9" stroke-width="2"/>
+  <text x="485" y="165" fill="#e5e7eb" font-family="Arial" font-size="22" font-weight="700" text-anchor="middle">Components</text>
+  <text x="485" y="205" fill="#a7f3d0" font-family="Arial" font-size="16" text-anchor="middle">Navbar / Hero</text>
+  <text x="485" y="235" fill="#a7f3d0" font-family="Arial" font-size="16" text-anchor="middle">Projects / Skills</text>
+  <text x="485" y="265" fill="#a7f3d0" font-family="Arial" font-size="16" text-anchor="middle">Contact / Footer</text>
+
+  <rect x="690" y="120" width="250" height="180" rx="12" fill="#3b0764" stroke="#c084fc" stroke-width="2"/>
+  <text x="815" y="165" fill="#e5e7eb" font-family="Arial" font-size="22" font-weight="700" text-anchor="middle">Data + UI</text>
+  <text x="815" y="205" fill="#e9d5ff" font-family="Arial" font-size="16" text-anchor="middle">Portfolio data</text>
+  <text x="815" y="235" fill="#e9d5ff" font-family="Arial" font-size="16" text-anchor="middle">Project cards</text>
+  <text x="815" y="265" fill="#e9d5ff" font-family="Arial" font-size="16" text-anchor="middle">Demo URLs</text>
+
+  <rect x="310" y="390" width="290" height="170" rx="12" fill="#1e3a8a" stroke="#93c5fd" stroke-width="2"/>
+  <text x="455" y="435" fill="#e5e7eb" font-family="Arial" font-size="22" font-weight="700" text-anchor="middle">Contact API</text>
+  <text x="455" y="475" fill="#bfdbfe" font-family="Arial" font-size="16" text-anchor="middle">Zod validation</text>
+  <text x="455" y="505" fill="#bfdbfe" font-family="Arial" font-size="16" text-anchor="middle">Rate limiting</text>
+  <text x="455" y="535" fill="#bfdbfe" font-family="Arial" font-size="16" text-anchor="middle">Nodemailer</text>
+
+  <path d="M290 210 L360 210" fill="none" stroke="#a7f3d0" stroke-width="3"/>
+  <path d="M610 210 L690 210" fill="none" stroke="#c084fc" stroke-width="3"/>
+  <path d="M455 300 L455 390" fill="none" stroke="#bfdbfe" stroke-width="3"/>
+
+  <text x="600" y="640" fill="#e5e7eb" font-family="Arial" font-size="16" text-anchor="middle">Local development + Vercel-ready deployment</text>
+</svg>

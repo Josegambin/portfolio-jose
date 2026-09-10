@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import nodemailer from "nodemailer";
 import { z } from "zod";
 
-// Rate limiting simple usando memoria (para producción usar Redis)
+// In-memory rate limiting is enough for local/demo use. In production, use Redis or a managed gateway.
 const rateLimit = new Map<string, { count: number; resetTime: number }>();
 
 const RATE_LIMIT_WINDOW = 60 * 60 * 1000; // 1 hora
