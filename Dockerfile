@@ -1,19 +1,19 @@
-# --- ETAPA 1: INSTALACIÓN DE DEPENDENCIAS ---
+# --- ETAPA 1: DEPENDENCIAS ---
 FROM node:18-alpine AS deps
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
-# Copiamos apuntando a la subcarpeta del repositorio
-COPY portfolio-jose/package*.json ./
+# Copia usando rutas locales puras
+COPY ./package*.json ./
 RUN npm install
 
-# --- ETAPA 2: COMPILACIÓN (BUILD) ---
+# --- ETAPA 2: COMPILACIÓN ---
 FROM node:18-alpine AS builder
 WORKDIR /app
 
 COPY --from=deps /app/node_modules ./node_modules
-# Copiamos todo el contenido de la subcarpeta del proyecto
-COPY portfolio-jose/ .
+# Forzamos copia desde el directorio de ejecución actual
+COPY . .
 
 ENV NEXT_TELEMETRY_DISABLED=1
 RUN npm run build
