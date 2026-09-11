@@ -1,38 +1,24 @@
-# --- ETAPA 1: INSTALACIÓN DE DEPENDENCIAS ---
-FROM node:20-alpine AS deps
+FROM node:20-alpine
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
+# Deshabilitar telemetría
+ENV NEXT_TELEMETRY_DISABLED=1
+ENV NODE_ENV=production
+
+# Copiar archivos esenciales
 COPY package*.json ./
-RUN npm install
 
-# --- ETAPA 2: COMPILACIÓN (BUILD) ---
-FROM node:20-alpine AS builder
-WORKDIR /app
+# Instalar dependencias limpias de producción
+RUN npm install --no-audit --no-fund
 
-COPY --from=deps /app/node_modules ./node_modules
+# Copiar el código fuente
 COPY . .
 
-ENV NEXT_TELEMETRY_DISABLED=1
+# Compilar la aplicación Next.js
 RUN npm run build
 
-# --- ETAPA 3: PRODUCCIÓN ---
-FROM node:20-alpine AS runner
-WORKDIR /app
-
-ENV NODE_ENV=production
-ENV NEXT_TELEMETRY_DISABLED=1
-
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nextjs
-
-COPY --from=builder /app/public ./public
-COPY --from=builder --chown=nextjs:nodejs /app/.next ./.next
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/package.json ./package.json
-
-USER nextjs
-
+# Exponer puerto y arrancar
 EXPOSE 3000
 ENV PORT=3000
 
