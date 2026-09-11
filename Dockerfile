@@ -2,23 +2,23 @@ FROM node:20-alpine
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
-# Deshabilitar telemetría de Next.js
+# Deshabilitamos telemetría
 ENV NEXT_TELEMETRY_DISABLED=1
-ENV NODE_ENV=production
 
-# Copiar archivos esenciales de configuración
+# Copiar archivos de configuración esenciales
 COPY package*.json ./
 
-# Instalar dependencias completas sin duplicar capas en disco
-RUN npm install --no-audit --no-fund
+# Forzamos la instalación de TODO (incluyendo devDependencies para Tailwind)
+RUN npm install --include=dev --no-audit --no-fund
 
-# Copiar el código fuente
+# Copiar el resto del código fuente del proyecto
 COPY . .
 
-# Compilar la aplicación Next.js (Ahora Tailwind PostCSS funcionará)
+# Establecemos la variable de producción justo antes de compilar
+ENV NODE_ENV=production
 RUN npm run build
 
-# Exponer puerto y comando de arranque
+# Exponer puerto y comando de arranque final
 EXPOSE 3000
 ENV PORT=3000
 
