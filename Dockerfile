@@ -1,25 +1,23 @@
-# --- ETAPA 1: DEPENDENCIAS ---
-FROM node:18-alpine AS deps
+# --- ETAPA 1: INSTALACIÓN DE DEPENDENCIAS ---
+FROM node:20-alpine AS deps
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
-# Copia usando rutas locales puras
-COPY ./package*.json ./
+COPY package*.json ./
 RUN npm install
 
-# --- ETAPA 2: COMPILACIÓN ---
-FROM node:18-alpine AS builder
+# --- ETAPA 2: COMPILACIÓN (BUILD) ---
+FROM node:20-alpine AS builder
 WORKDIR /app
 
 COPY --from=deps /app/node_modules ./node_modules
-# Forzamos copia desde el directorio de ejecución actual
 COPY . .
 
 ENV NEXT_TELEMETRY_DISABLED=1
 RUN npm run build
 
 # --- ETAPA 3: PRODUCCIÓN ---
-FROM node:18-alpine AS runner
+FROM node:20-alpine AS runner
 WORKDIR /app
 
 ENV NODE_ENV=production
