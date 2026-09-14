@@ -99,7 +99,7 @@ export async function POST(req: NextRequest) {
 
     // Verificar variables de entorno
     const emailUser = process.env.EMAIL_USER?.trim();
-    const emailPassword = process.env.EMAIL_PASSWORD?.replace(/\s/g, "");
+    const emailPassword = process.env.EMAIL_PAS?.replace(/\s/g, "");
 
     if (!emailUser || !emailPassword) {
       console.error("Faltan credenciales de email");
