@@ -7,7 +7,11 @@ import { portfolio } from "@/data/portfolio";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://josegambin.dev'),
+ metadataBase: new URL(
+  process.env.VERCEL_URL 
+    ? `https://${process.env.VERCEL_URL}` 
+    : 'http://localhost:3000'
+),
   title: {
     default: `${portfolio.shortName} · ${portfolio.role}`,
     template: `%s · ${portfolio.shortName}`
