@@ -109,7 +109,7 @@ const BASE_PATH = IS_PROD ? "/portfolio-jose" : "";
           <div className="absolute -inset-6 rounded-[3rem] bg-gradient-to-br from-blue-500/20 to-purple-500/20 blur-3xl" />
           <div className="relative rotate-2 overflow-hidden rounded-[2.5rem] border border-white/10 bg-zinc-900/50 p-2 shadow-2xl shadow-blue-950/40">
             <Image
-              src={`${BASE_PATH}/fotoPortfolio.png`} // 👈 CAMBIA ESTA LÍNEA (Añade la variable del Base Path)
+              src="/fotoPortfolio.png" // 👈 CAMBIA ESTA LÍNEA (Añade la variable del Base Path)
               alt="Avatar ilustrado de José Gambín"
               width={420}
               height={420}
