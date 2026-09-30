@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import nodemailer from "nodemailer";
 import { z } from "zod";
 
+export const dynamic = "force-dynamic"
+
 // In-memory rate limiting is enough for local/demo use. In production, use Redis or a managed gateway.
 const rateLimit = new Map<string, { count: number; resetTime: number }>();
 
@@ -98,8 +100,10 @@ export async function POST(req: NextRequest) {
     const { name, email, message } = validationResult.data;
 
     // Verificar variables de entorno
-    const emailUser = process.env.EMAIL_USER?.trim();
-    const emailPassword = process.env.EMAIL_PASSSWORD?.replace(/\s/g, "");
+    // Reemplaza tus dos líneas actuales de variables por estas:
+    const emailUser = process.env.EMAIL_USER ? process.env.EMAIL_USER.trim() : "";
+    const emailPassword = process.env.EMAIL_PASSWORD ? process.env.EMAIL_PASSWORD.replace(/\s/g, "") : "";
+
 
     if (!emailUser || !emailPassword) {
       console.error("Faltan credenciales de email");
@@ -108,6 +112,7 @@ export async function POST(req: NextRequest) {
         { status: 500 }
       );
     }
+    
 
     // Configurar transporter con opciones de seguridad
     const transporter = nodemailer.createTransport({
